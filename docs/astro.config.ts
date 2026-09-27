@@ -45,6 +45,7 @@ export default defineConfig({
         },
         {
           label: "Demo",
+          collapsed: true,
           items: [
             {
               label: "Guides",
@@ -54,14 +55,11 @@ export default defineConfig({
               label: "Reference",
               items: [{ autogenerate: { directory: "demo/reference" } }],
             },
-            {
-              label: "Tutorials",
-              items: [{ autogenerate: { directory: "demo/tutorials" } }],
-            },
           ],
         },
       ],
       credits: true,
+      routeMiddleware: "./src/routeData.ts",
     }),
   ],
 });
