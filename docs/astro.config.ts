@@ -48,6 +48,7 @@ export default defineConfig({
             "getting-started",
             "group-pages",
             "customization",
+            "i18n",
             "configuration",
           ],
         },

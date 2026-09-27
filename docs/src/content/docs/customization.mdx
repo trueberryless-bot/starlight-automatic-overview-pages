@@ -68,10 +68,9 @@ Link cards of nested groups display the description of the group's index page, o
 
 To change the label of a link card, change the label of the sidebar entry, e.g. with the [`sidebar.label`](https://starlight.astro.build/reference/frontmatter/#label) frontmatter field.
 
-## Translate the sidebar link
+## Change the “Overview” label
 
-Add the `starlightGroupPages.sidebarLink` key to your [translation files](https://starlight.astro.build/guides/i18n/#translate-starlights-ui) to change the label of the “Overview” sidebar link or to translate it into a missing language.
-This label is not used when the [`sidebarLink`](/configuration/#sidebarlink) option is set to `label`.
+Override the `starlightGroupPages.sidebarLink` UI string in your [translation files](https://starlight.astro.build/guides/i18n/#translate-starlights-ui):
 
 ```json
 // src/content/i18n/en.json
@@ -79,6 +78,8 @@ This label is not used when the [`sidebarLink`](/configuration/#sidebarlink) opt
   "starlightGroupPages.sidebarLink": "Introduction"
 }
 ```
+
+See [“Internationalization (i18n)”](/i18n/#translate-the-ui) for all UI strings and the languages provided out of the box.
 
 ## Make group labels clickable
 
