@@ -7,6 +7,12 @@ export default defineConfig({
     starlight({
       title: "Group Pages",
       pagefind: false,
+      head: [
+        {
+          tag: "meta",
+          attrs: { name: "description", content: "Site description" },
+        },
+      ],
       plugins: [
         starlightGroupPages({
           exclude: ["guides/advanced"],

@@ -218,6 +218,18 @@ describe("options", () => {
     ]);
   });
 
+  test("keeps a site-wide description like Starlight does", () => {
+    const html = readFixtureOutput("options", "guides/index.html");
+
+    expect(html.match(/<meta name="description"/g)).toHaveLength(1);
+    expect(html).toContain(
+      '<meta name="description" content="Site description"/>'
+    );
+    expect(html).toContain(
+      '<meta property="og:description" content="Installation, Deployment, and advanced"/>'
+    );
+  });
+
   test("supports the list layout", () => {
     expect(hasCardGrid(readFixtureOutput("options", "guides/index.html"))).toBe(
       false

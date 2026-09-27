@@ -194,6 +194,26 @@ describe("getDirectoryOverview", () => {
     });
   });
 
+  test("summarizes subdirectories with the labels of their direct children only", () => {
+    const nestedDocs = createDocs([
+      createEntry("guides/a", { title: "A" }),
+      createEntry("guides/advanced/b", { title: "B" }),
+      createEntry("guides/advanced/deep/c", { title: "C" }),
+    ]);
+
+    expect(
+      getDirectoryOverview("guides", {
+        ...getOptions("guides"),
+        docs: nestedDocs,
+      }).entries[1]
+    ).toEqual({
+      type: "link",
+      label: "advanced",
+      href: "/guides/advanced/",
+      description: "B and deep",
+    });
+  });
+
   test("uses the title of the index page", () => {
     expect(
       getDirectoryOverview("guides/advanced", getOptions("guides/advanced"))

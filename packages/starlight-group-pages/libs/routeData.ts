@@ -101,8 +101,20 @@ function updateGeneratedPageMetadata(
 
   if (overview.description) {
     starlightRoute.entry.data.description = overview.description;
-    starlightRoute.head.push(...getDescriptionHeadTags(overview.description));
+    starlightRoute.head.push(
+      ...getDescriptionHeadTags(overview.description).filter(
+        (tag) => !hasHeadTag(starlightRoute.head, tag)
+      )
+    );
   }
+}
+
+function hasHeadTag(head: HeadTag[], tag: HeadTag): boolean {
+  return head.some(
+    ({ attrs }) =>
+      attrs?.["name"] === tag.attrs?.["name"] &&
+      attrs?.["property"] === tag.attrs?.["property"]
+  );
 }
 
 function getDescriptionHeadTags(description: string): HeadTag[] {

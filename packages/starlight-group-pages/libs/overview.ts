@@ -46,12 +46,45 @@ function getDirectoryEntries(
   directory: string,
   options: OverviewOptions
 ): OverviewLink[] {
+  return getDirectoryChildren(directory, options).map((child) =>
+    getDirectoryChildEntry(child, options)
+  );
+}
+
+function getDirectoryChildren(
+  directory: string,
+  options: OverviewOptions
+): DirectoryChild[] {
   return [
     ...getChildPages(directory, options),
     ...getChildDirectories(directory, options),
-  ]
-    .sort(compareDirectoryEntries)
-    .map(({ entry }) => entry);
+  ].sort(compareDirectoryChildren);
+}
+
+function getDirectoryChildEntry(
+  child: DirectoryChild,
+  options: OverviewOptions
+): OverviewLink {
+  return {
+    type: "link",
+    label: child.label,
+    href: getLocalizedHref(child.slug, options),
+    description:
+      child.description ??
+      (child.isDirectory
+        ? getDirectorySummary(child.slug, options)
+        : undefined),
+  };
+}
+
+function getDirectorySummary(
+  directory: string,
+  options: OverviewOptions
+): string | undefined {
+  return getLabelsSummary(
+    getDirectoryChildren(directory, options).map(({ label }) => label),
+    options.lang
+  );
 }
 
 function getEntriesSummary(
@@ -149,7 +182,7 @@ function isCurrentLink(link: SidebarLink, options: OverviewOptions): boolean {
 function getChildPages(
   directory: string,
   options: OverviewOptions
-): SortableOverviewEntry[] {
+): DirectoryChild[] {
   const directories = getLocaleDirectories(options.docs, options.locale);
   const slugs = new Set(
     getLocalePages(options.docs.pages.values(), options.locale, options.context)
@@ -166,7 +199,9 @@ function getChildPages(
     )
     .filter((page): page is DocsPage => page !== undefined && !page.hidden)
     .map((page) => ({
-      entry: getPageOverviewEntry(page, options),
+      description: page.description,
+      isDirectory: false,
+      label: page.label,
       order: page.order,
       slug: page.slug,
     }));
@@ -175,7 +210,7 @@ function getChildPages(
 function getChildDirectories(
   directory: string,
   options: OverviewOptions
-): SortableOverviewEntry[] {
+): DirectoryChild[] {
   return [...getLocaleDirectories(options.docs, options.locale)]
     .filter((childDirectory) => getParentPath(childDirectory) === directory)
     .flatMap((childDirectory) => {
@@ -196,34 +231,14 @@ function getChildDirectories(
 
       return [
         {
-          entry: {
-            type: "link" as const,
-            label: page?.label ?? getPathName(childDirectory),
-            href: getLocalizedHref(childDirectory, options),
-            description:
-              page?.description ??
-              getEntriesSummary(
-                getDirectoryEntries(childDirectory, options),
-                options
-              ),
-          },
+          description: page?.description,
+          isDirectory: true,
+          label: page?.label ?? getPathName(childDirectory),
           order: page?.order,
           slug: childDirectory,
         },
       ];
     });
-}
-
-function getPageOverviewEntry(
-  page: DocsPage,
-  options: OverviewOptions
-): OverviewLink {
-  return {
-    type: "link",
-    label: page.label,
-    href: getLocalizedHref(page.slug, options),
-    description: page.description,
-  };
 }
 
 function getDirectoryPage(
@@ -237,9 +252,9 @@ function getLocalizedHref(slug: string, options: OverviewOptions): string {
   return slugToHref(localizeSlug(slug, options.locale), options.context);
 }
 
-function compareDirectoryEntries(
-  a: SortableOverviewEntry,
-  b: SortableOverviewEntry
+function compareDirectoryChildren(
+  a: DirectoryChild,
+  b: DirectoryChild
 ): number {
   const orderA = a.order ?? Number.MAX_VALUE;
   const orderB = b.order ?? Number.MAX_VALUE;
@@ -280,8 +295,10 @@ export interface OverviewGroup {
   entries: OverviewEntry[];
 }
 
-interface SortableOverviewEntry {
-  entry: OverviewLink;
+interface DirectoryChild {
+  description: string | undefined;
+  isDirectory: boolean;
+  label: string;
   order: number | undefined;
   slug: string;
 }
