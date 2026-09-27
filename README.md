@@ -1,5 +1,7 @@
 # `starlight-group-pages`
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/b1625295-60bb-4f98-b6a6-e53af403b4fc/deploy-status)](https://app.netlify.com/projects/starlight-group-pages/deploys)
+
 Starlight plugin to give your sidebar groups their own pages.
 
 ## Documentation
