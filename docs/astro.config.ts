@@ -18,9 +18,30 @@ export default defineConfig({
   integrations: [
     starlight({
       title: "Starlight Group Pages",
-      head: isLabelDemo
-        ? [{ tag: "meta", attrs: { name: "robots", content: "noindex" } }]
-        : [],
+      head: [
+        {
+          tag: "meta",
+          attrs: {
+            property: "og:image",
+            content: new URL("og.png", site).href,
+          },
+        },
+        {
+          tag: "meta",
+          attrs: {
+            property: "og:image:alt",
+            content: "Automatic overview pages for sidebar groups.",
+          },
+        },
+        ...(isLabelDemo
+          ? [
+              {
+                tag: "meta" as const,
+                attrs: { name: "robots", content: "noindex" },
+              },
+            ]
+          : []),
+      ],
       social: [
         {
           icon: "github",
