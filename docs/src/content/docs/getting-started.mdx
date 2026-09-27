@@ -1,49 +1,34 @@
 ---
 title: Getting Started
+description: Learn how to generate overview pages for your sidebar groups with the Starlight Automatic Overview Pages plugin.
 ---
 
-Insert new routes or append content to index.mdx pages in every folder so that users can get an overview.
+A [Starlight plugin](https://starlight.astro.build/reference/plugins/) to generate overview pages for your sidebar groups.
+
+Sidebar groups in Starlight organize pages, but a group has no page of its own: clicking a group label only expands or collapses it.
+This plugin gives every group a landing page:
+
+- [Overview pages](/overview-pages/) are generated for every directory of your docs, listing its pages and subdirectories as [link cards](https://starlight.astro.build/components/link-cards/).
+- Each sidebar group gets an “Overview” link to its overview page, which is also part of the previous and next page links.
+- Existing index pages, e.g. `guides/index.mdx`, are [extended](/customization/#add-an-introduction) with the link cards so you can write your own introduction.
+
+Browse the [demo](/demo/) to see the generated pages in action.
 
 ## Prerequisites
 
 You will need to have a Starlight website set up.
-If you don't have one yet, you can follow the ["Getting Started"](https://starlight.astro.build/getting-started) guide in the Starlight docs to create one.
+If you don't have one yet, you can follow the ["Getting Started"](https://starlight.astro.build/getting-started/) guide in the Starlight docs to create one.
 
 ## Installation
 
-import { Steps, Tabs, TabItem } from '@astrojs/starlight/components'
+import { Steps } from "@astrojs/starlight/components";
+import { PackageManagers } from "starlight-package-managers";
 
 <Steps>
 
-1. `starlight-automatic-overview-pages` is a Starlight [plugin](https://starlight.astro.build/reference/plugins/). Install it by running the following command in your terminal:
+1. Starlight Automatic Overview Pages is a Starlight [plugin](https://starlight.astro.build/reference/plugins/) that you can install using your favorite package manager:
 
-   <Tabs syncKey="pkg">
-
-   <TabItem label="npm">
-
-   ```sh
-   npm install starlight-automatic-overview-pages
-   ```
-
-   </TabItem>
-
-   <TabItem label="pnpm">
-
-   ```sh
-   pnpm add starlight-automatic-overview-pages
-   ```
-
-   </TabItem>
-
-   <TabItem label="Yarn">
-
-   ```sh
-   yarn add starlight-automatic-overview-pages
-   ```
-
-   </TabItem>
-
-   </Tabs>
+   <PackageManagers pkg="starlight-automatic-overview-pages" />
 
 2. Configure the plugin in your Starlight [configuration](https://starlight.astro.build/reference/configuration/#plugins) in the `astro.config.mjs` file.
 
@@ -63,6 +48,28 @@ import { Steps, Tabs, TabItem } from '@astrojs/starlight/components'
    })
    ```
 
-3. [Start the development server](https://starlight.astro.build/getting-started/#start-the-development-server) to preview the plugin in action.
+3. [Start the development server](https://starlight.astro.build/getting-started/#start-the-development-server) to see the plugin in action.
 
 </Steps>
+
+The Starlight Automatic Overview Pages plugin behavior can be tweaked using various [configuration options](/configuration/).
+
+## Component overrides
+
+The Starlight Automatic Overview Pages plugin uses a Starlight [component override](https://starlight.astro.build/guides/overriding-components/) for the [`MarkdownContent`](https://starlight.astro.build/reference/overrides/#markdowncontent) component to render the link cards of overview pages.
+
+If you have a custom `MarkdownContent` component override in your Starlight project, you will need to manually render the `MarkdownContent` component from the Starlight Automatic Overview Pages plugin inside the default component:
+
+```diff lang="astro"
+---
+// src/components/overrides/MarkdownContent.astro
+import Default from '@astrojs/starlight/components/MarkdownContent.astro'
++import StarlightAutomaticOverviewPagesMarkdownContent from 'starlight-automatic-overview-pages/components/MarkdownContent.astro'
+---
+
+<Default>
+  <slot />
++  <StarlightAutomaticOverviewPagesMarkdownContent />
+</Default>
+<p>Custom content in the MarkdownContent override</p>
+```

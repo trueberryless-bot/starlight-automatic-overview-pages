@@ -1,10 +1,14 @@
 # `starlight-automatic-overview-pages`
 
-Insert new routes or append content to index.mdx pages in every folder so that users can get an overview.
+Starlight plugin to generate overview pages for your sidebar groups.
+
+## Documentation
+
+Read the [Starlight Automatic Overview Pages docs](https://starlight-automatic-overview-pages.netlify.app).
 
 ## Package
 
-If you are looking for the Starlight plugin package, you can find it in the [`packages/starlight-automatic-overview-pages/`](/packages/starlight-automatic-overview-pages/) directory.
+If you are looking for the Starlight plugin package, you can find it in the [`packages/starlight-automatic-overview-pages/`](https://github.com/trueberryless-org/starlight-automatic-overview-pages/tree/main/packages/starlight-automatic-overview-pages) directory.
 
 ## Project structure
 
@@ -12,6 +16,6 @@ This project uses pnpm workspaces to develop a single Starlight plugin from the 
 
 ## License
 
-Licensed under the MIT License, Copyright © trueberryless-org.
+Licensed under the MIT License, Copyright © trueberryless.
 
-See [LICENSE](/LICENSE) for more information.
+See [LICENSE](https://github.com/trueberryless-org/starlight-automatic-overview-pages/blob/main/LICENSE) for more information.

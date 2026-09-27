@@ -1,30 +1,74 @@
 ---
 title: Starlight Automatic Overview Pages
-description: Insert new routes or append content to index.mdx pages in every folder so that users can get an overview.
+description: Starlight plugin to generate overview pages for your sidebar groups.
 head:
   - tag: title
     content: Starlight Automatic Overview Pages
+  - tag: style
+    content: |
+      .hero-html {
+        --size: 12rem;
+        font-size: var(--size);
+        justify-content: center;
+        line-height: var(--size);
+      }
 template: splash
 editUrl: false
+lastUpdated: false
 hero:
-  tagline: Insert new routes or append content to index.mdx pages in every folder so that users can get an overview.
+  tagline: Starlight plugin to generate overview pages for your sidebar groups.
   image:
-    file: ../../assets/houston.webp
+    html: "🧭"
   actions:
-    - text: Get Started
+    - text: Getting Started
       link: /getting-started/
+      icon: rocket
+      variant: primary
+    - text: See the demo
+      link: /demo/
       icon: right-arrow
 ---
 
 import { Card, CardGrid } from "@astrojs/starlight/components";
 
+## Features
+
+<CardGrid stagger>
+  <Card title="Overview pages" icon="document">
+    Every directory of your docs gets a page listing its content with Starlight
+    link cards, using the titles and descriptions of your pages.
+  </Card>
+  <Card title="Sidebar links" icon="list-format">
+    Each sidebar group links to its overview page, so readers can always reach
+    the landing page of a section, also with the previous and next page links.
+  </Card>
+  <Card title="Customizable" icon="pencil">
+    Write an index page with an introduction and the plugin appends the link
+    cards below it. No new syntax or configuration to learn.
+  </Card>
+  <Card title="Multilingual" icon="translate">
+    Overview pages are generated for every language of your site, with
+    translated labels and fallback content for untranslated pages.
+  </Card>
+</CardGrid>
+
 ## Next steps
 
 <CardGrid stagger>
   <Card title="Install the plugin" icon="puzzle">
-    Check the [getting started guide](/getting-started/) for installation instructions.
+    Check the [getting started guide](/getting-started/) for installation
+    instructions.
   </Card>
   <Card title="Configure the plugin" icon="setting">
-    Edit your config in the `astro.config.mjs` file.
+    Learn about the available [configuration options](/configuration/).
   </Card>
 </CardGrid>
+
+## Contributors
+
+import { ContributorList } from "astro-contributors";
+
+<ContributorList
+  githubRepo="trueberryless-org/starlight-automatic-overview-pages"
+  ignore={["autofix-ci[bot]", "github-actions[bot]", "renovate[bot]"]}
+/>

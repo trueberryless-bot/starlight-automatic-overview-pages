@@ -1,12 +1,12 @@
 # `starlight-automatic-overview-pages`
 
-Insert new routes or append content to index.mdx pages in every folder so that users can get an overview.
+Starlight plugin to generate overview pages for your sidebar groups.
 
 ## Documentation
 
 Want to get started immediately?
 
-Check out the `starlight-automatic-overview-pages` getting started guide.
+Check out the [`starlight-automatic-overview-pages` getting started guide](https://starlight-automatic-overview-pages.netlify.app/getting-started/).
 
 ## License
 
