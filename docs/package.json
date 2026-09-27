@@ -1,19 +1,10 @@
 {
-  "name": "starlight-automatic-overview-pages-docs",
+  "name": "starlight-group-pages-docs",
   "version": "0.0.1",
-  "private": true,
-  "description": "Insert new routes or append content to index.mdx pages in every folder so that users can get an overview.",
-  "homepage": "https://starlight-automatic-overview-pages.netlify.app/",
-  "bugs": {
-    "url": "https://github.com/trueberryless-org/starlight-automatic-overview-pages/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/trueberryless-org/starlight-automatic-overview-pages.git",
-    "directory": "docs"
-  },
   "license": "MIT",
+  "description": "Documentation for the Starlight Group Pages plugin.",
   "author": "trueberryless <trueberryless@gmail.com> (https://felixs.dev)",
+  "private": true,
   "type": "module",
   "scripts": {
     "astro": "astro",
@@ -23,13 +14,23 @@
     "start": "astro dev"
   },
   "dependencies": {
-    "@astrojs/starlight": "^0.42.0",
-    "astro": "^5.3.0",
+    "@astrojs/starlight": "^0.42.4",
+    "@trueberryless-org/starlight-plugins-docs-components": "^0.7.0",
+    "astro": "^7.3.5",
+    "astro-contributors": "^0.9.0",
     "sharp": "^0.35.4",
-    "starlight-automatic-overview-pages": "workspace:*"
+    "starlight-group-pages": "workspace:*",
+    "starlight-links-validator": "^0.26.0",
+    "starlight-package-managers": "^0.13.0"
   },
-  "packageManager": "pnpm@11.1.2",
   "engines": {
-    "node": "^18.17.1 || ^20.3.0 || >=21.0.0"
-  }
+    "node": ">=22.12.0"
+  },
+  "homepage": "https://starlight-group-pages.netlify.app",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/trueberryless-org/starlight-group-pages.git",
+    "directory": "docs"
+  },
+  "bugs": "https://github.com/trueberryless-org/starlight-group-pages/issues"
 }

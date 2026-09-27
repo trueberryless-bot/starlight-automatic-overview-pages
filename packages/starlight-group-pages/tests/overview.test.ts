@@ -1,0 +1,170 @@
+import { describe, expect, test } from "vitest";
+
+import { getDirectoryOverview, getGroupOverview } from "../libs/overview";
+import { type SidebarOverview, getSidebarOverviews } from "../libs/sidebar";
+import {
+  createConfig,
+  createContext,
+  createDocs,
+  createEntry,
+  createGroup,
+  createLink,
+} from "./mocks";
+
+const docs = createDocs([
+  createEntry("guides/a", { title: "A", description: "About A" }),
+  createEntry("guides/b", {
+    title: "B",
+    sidebar: { label: "Bee", order: 1 },
+  }),
+  createEntry("guides/c", { title: "C", sidebar: { hidden: true } }),
+  createEntry("guides/advanced", {
+    title: "Advanced",
+    description: "About advanced",
+  }),
+  createEntry("guides/advanced/d", { title: "D" }),
+]);
+
+function getFirstOverview(overviews: SidebarOverview[]): SidebarOverview {
+  const [overview] = overviews;
+  if (!overview) throw new Error("Expected an overview.");
+
+  return overview;
+}
+
+function getOptions(currentSlug: string, overviews: SidebarOverview[] = []) {
+  return {
+    config: createConfig(),
+    context: createContext(),
+    currentSlug,
+    docs,
+    locale: undefined,
+    overviews,
+  };
+}
+
+describe("getGroupOverview", () => {
+  test("lists the group entries with their descriptions", () => {
+    const advanced = createGroup("advanced", [
+      createLink("/guides/advanced/", "Advanced"),
+      createLink("/guides/advanced/d/", "D"),
+    ]);
+    const guides = createGroup("Guides", [
+      createLink("/guides/a/", "A"),
+      advanced,
+      createLink("https://astro.build", "Astro"),
+    ]);
+    const sidebar = [guides];
+    const overviews = getSidebarOverviews(sidebar, getOptions(""));
+
+    expect(
+      getGroupOverview(getFirstOverview(overviews), {
+        ...getOptions("guides"),
+        overviews,
+      })
+    ).toEqual({
+      title: "Guides",
+      entries: [
+        {
+          type: "link",
+          label: "A",
+          href: "/guides/a/",
+          description: "About A",
+        },
+        {
+          type: "link",
+          label: "advanced",
+          href: "/guides/advanced/",
+          description: "About advanced",
+        },
+        {
+          type: "link",
+          label: "Astro",
+          href: "https://astro.build",
+          description: undefined,
+        },
+      ],
+    });
+  });
+
+  test("omits the current page", () => {
+    const advanced = createGroup("advanced", [
+      createLink("/guides/advanced/", "Advanced", true),
+      createLink("/guides/advanced/d/", "D"),
+    ]);
+    const overviews = getSidebarOverviews([advanced], getOptions(""));
+
+    expect(
+      getGroupOverview(getFirstOverview(overviews), {
+        ...getOptions("guides/advanced"),
+        overviews,
+      }).entries.map(({ label }) => label)
+    ).toEqual(["D"]);
+  });
+
+  test("renders nested groups without an overview page as groups", () => {
+    const options = {
+      ...getOptions("guides"),
+      config: createConfig({ exclude: ["guides/advanced"] }),
+    };
+    const advanced = createGroup("advanced", [
+      createLink("/guides/advanced/d/", "D"),
+    ]);
+    const guides = createGroup("Guides", [
+      createLink("/guides/a/", "A"),
+      advanced,
+    ]);
+    const overviews = getSidebarOverviews([guides], options);
+
+    expect(
+      getGroupOverview(getFirstOverview(overviews), { ...options, overviews })
+        .entries[1]
+    ).toEqual({
+      type: "group",
+      label: "advanced",
+      entries: [
+        {
+          type: "link",
+          label: "D",
+          href: "/guides/advanced/d/",
+          description: undefined,
+        },
+      ],
+    });
+  });
+});
+
+describe("getDirectoryOverview", () => {
+  test("lists the visible pages and subdirectories sorted like the sidebar", () => {
+    expect(getDirectoryOverview("guides", getOptions("guides"))).toEqual({
+      title: "guides",
+      entries: [
+        {
+          type: "link",
+          label: "Bee",
+          href: "/guides/b/",
+          description: undefined,
+        },
+        {
+          type: "link",
+          label: "A",
+          href: "/guides/a/",
+          description: "About A",
+        },
+        {
+          type: "link",
+          label: "Advanced",
+          href: "/guides/advanced/",
+          description: "About advanced",
+        },
+      ],
+    });
+  });
+
+  test("uses the title of the index page", () => {
+    expect(
+      getDirectoryOverview("guides/advanced", getOptions("guides/advanced"))
+        .title
+    ).toBe("Advanced");
+  });
+});

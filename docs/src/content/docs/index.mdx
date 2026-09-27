@@ -1,30 +1,73 @@
 ---
-title: Starlight Automatic Overview Pages
-description: Insert new routes or append content to index.mdx pages in every folder so that users can get an overview.
+title: Starlight Group Pages
+description: Starlight plugin to give your sidebar groups their own pages.
 head:
   - tag: title
-    content: Starlight Automatic Overview Pages
+    content: Starlight Group Pages
+  - tag: style
+    content: |
+      .hero-html {
+        --size: 12rem;
+        font-size: var(--size);
+        justify-content: center;
+        line-height: var(--size);
+      }
 template: splash
 editUrl: false
+lastUpdated: false
 hero:
-  tagline: Insert new routes or append content to index.mdx pages in every folder so that users can get an overview.
+  tagline: Starlight plugin to give your sidebar groups their own pages.
   image:
-    file: ../../assets/houston.webp
+    html: "🧭"
   actions:
-    - text: Get Started
+    - text: Getting Started
       link: /getting-started/
+      icon: rocket
+      variant: primary
+    - text: See the demo
+      link: /demo/
       icon: right-arrow
 ---
 
 import { Card, CardGrid } from "@astrojs/starlight/components";
 
+## Features
+
+<CardGrid stagger>
+  <Card title="A page for every group" icon="document">
+    Directories without an index page get a generated page listing their
+    content as link cards.
+  </Card>
+  <Card title="Sidebar and pagination" icon="list-format">
+    Each sidebar group links to its page, which is also part of the previous
+    and next page links.
+  </Card>
+  <Card title="Your own introduction" icon="pencil">
+    Write an index page and the plugin appends the link cards below your
+    content.
+  </Card>
+  <Card title="Multilingual" icon="translate">
+    Group pages exist in every language of your site, with translated labels
+    and fallback content.
+  </Card>
+</CardGrid>
+
 ## Next steps
 
 <CardGrid stagger>
   <Card title="Install the plugin" icon="puzzle">
-    Check the [getting started guide](/getting-started/) for installation instructions.
+    Follow the [getting started guide](/getting-started/).
   </Card>
-  <Card title="Configure the plugin" icon="setting">
-    Edit your config in the `astro.config.mjs` file.
+  <Card title="Explore the demo" icon="open-book">
+    See [generated group pages](/demo/) in action.
   </Card>
 </CardGrid>
+
+## Contributors
+
+import { ContributorList } from "astro-contributors";
+
+<ContributorList
+  githubRepo="trueberryless-org/starlight-group-pages"
+  ignore={["autofix-ci[bot]", "github-actions[bot]", "renovate[bot]"]}
+/>

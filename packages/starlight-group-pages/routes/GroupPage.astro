@@ -1,0 +1,15 @@
+---
+import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
+import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
+
+import { getOverviewStaticPaths } from "../libs/routes";
+
+export const getStaticPaths = (() =>
+  getOverviewStaticPaths()) satisfies GetStaticPaths;
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const { title } = Astro.props;
+---
+
+<StarlightPage frontmatter={{ title }} />

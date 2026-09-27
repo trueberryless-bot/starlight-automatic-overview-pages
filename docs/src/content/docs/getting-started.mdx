@@ -1,49 +1,32 @@
 ---
 title: Getting Started
+description: Learn how to give your sidebar groups their own pages with the Starlight Group Pages plugin.
 ---
 
-Insert new routes or append content to index.mdx pages in every folder so that users can get an overview.
+A [Starlight plugin](https://starlight.astro.build/reference/plugins/) to give your sidebar groups their own pages.
+
+In Starlight, a sidebar group only expands and collapses its items.
+With this plugin, every group gets a [group page](/group-pages/) listing its content, linked as the first item of the group:
+
+- Directories without an index page get a [generated group page](/group-pages/#generated-pages).
+- Existing index pages keep their content and get the link cards [appended](/customization/#add-an-introduction).
+- The group page is part of the [sidebar and the pagination](/group-pages/#sidebar-and-pagination).
 
 ## Prerequisites
 
 You will need to have a Starlight website set up.
-If you don't have one yet, you can follow the ["Getting Started"](https://starlight.astro.build/getting-started) guide in the Starlight docs to create one.
+If you don't have one yet, you can follow the ["Getting Started"](https://starlight.astro.build/getting-started/) guide in the Starlight docs to create one.
 
 ## Installation
 
-import { Steps, Tabs, TabItem } from '@astrojs/starlight/components'
+import { Steps } from "@astrojs/starlight/components";
+import { PackageManagers } from "starlight-package-managers";
 
 <Steps>
 
-1. `starlight-automatic-overview-pages` is a Starlight [plugin](https://starlight.astro.build/reference/plugins/). Install it by running the following command in your terminal:
+1. Starlight Group Pages is a Starlight [plugin](https://starlight.astro.build/reference/plugins/) that you can install using your favorite package manager:
 
-   <Tabs syncKey="pkg">
-
-   <TabItem label="npm">
-
-   ```sh
-   npm install starlight-automatic-overview-pages
-   ```
-
-   </TabItem>
-
-   <TabItem label="pnpm">
-
-   ```sh
-   pnpm add starlight-automatic-overview-pages
-   ```
-
-   </TabItem>
-
-   <TabItem label="Yarn">
-
-   ```sh
-   yarn add starlight-automatic-overview-pages
-   ```
-
-   </TabItem>
-
-   </Tabs>
+   <PackageManagers pkg="starlight-group-pages" />
 
 2. Configure the plugin in your Starlight [configuration](https://starlight.astro.build/reference/configuration/#plugins) in the `astro.config.mjs` file.
 
@@ -51,18 +34,40 @@ import { Steps, Tabs, TabItem } from '@astrojs/starlight/components'
    // astro.config.mjs
    import starlight from '@astrojs/starlight'
    import { defineConfig } from 'astro/config'
-   +import starlightAutomaticOverviewPages from 'starlight-automatic-overview-pages'
+   +import starlightGroupPages from 'starlight-group-pages'
 
    export default defineConfig({
      integrations: [
        starlight({
-   +      plugins: [starlightAutomaticOverviewPages()],
+   +      plugins: [starlightGroupPages()],
          title: 'My Docs',
        }),
      ],
    })
    ```
 
-3. [Start the development server](https://starlight.astro.build/getting-started/#start-the-development-server) to preview the plugin in action.
+3. [Start the development server](https://starlight.astro.build/getting-started/#start-the-development-server) and open the URL of a directory of your docs, e.g. `/guides/`, to see its group page.
 
 </Steps>
+
+The Starlight Group Pages plugin behavior can be tweaked using various [configuration options](/configuration/).
+
+## Component overrides
+
+The Starlight Group Pages plugin uses a Starlight [component override](https://starlight.astro.build/guides/overriding-components/) for the [`MarkdownContent`](https://starlight.astro.build/reference/overrides/#markdowncontent) component to render the link cards.
+
+If you have a custom `MarkdownContent` component override in your Starlight project, you will need to manually render the `MarkdownContent` component from the Starlight Group Pages plugin inside the default component:
+
+```diff lang="astro"
+---
+// src/components/overrides/MarkdownContent.astro
+import Default from '@astrojs/starlight/components/MarkdownContent.astro'
++import StarlightGroupPagesMarkdownContent from 'starlight-group-pages/components/MarkdownContent.astro'
+---
+
+<Default>
+  <slot />
++  <StarlightGroupPagesMarkdownContent />
+</Default>
+<p>Custom content in the MarkdownContent override</p>
+```

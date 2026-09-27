@@ -1,0 +1,15 @@
+export const Translations = {
+  en: { "starlightGroupPages.sidebarLink": "Overview" },
+  de: { "starlightGroupPages.sidebarLink": "Übersicht" },
+  fr: { "starlightGroupPages.sidebarLink": "Vue d’ensemble" },
+  es: { "starlightGroupPages.sidebarLink": "Resumen" },
+  it: { "starlightGroupPages.sidebarLink": "Panoramica" },
+  pt: { "starlightGroupPages.sidebarLink": "Visão geral" },
+  nl: { "starlightGroupPages.sidebarLink": "Overzicht" },
+  ru: { "starlightGroupPages.sidebarLink": "Обзор" },
+  uk: { "starlightGroupPages.sidebarLink": "Огляд" },
+  ja: { "starlightGroupPages.sidebarLink": "概要" },
+  ko: { "starlightGroupPages.sidebarLink": "개요" },
+  "zh-CN": { "starlightGroupPages.sidebarLink": "概览" },
+  "zh-TW": { "starlightGroupPages.sidebarLink": "概覽" },
+};
