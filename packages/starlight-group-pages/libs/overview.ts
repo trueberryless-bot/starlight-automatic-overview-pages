@@ -10,6 +10,7 @@ import {
 import { localizeSlug, stripSlugLocale } from "./locale";
 import { getParentPath, getPathName, hrefToSlug, slugToHref } from "./path";
 import type { SidebarEntry, SidebarLink, SidebarOverview } from "./sidebar";
+import { getLabelsSummary } from "./summary";
 import type { StarlightGroupPagesContext } from "./vite";
 
 const collator = new Intl.Collator();
@@ -18,9 +19,12 @@ export function getGroupOverview(
   overview: SidebarOverview,
   options: OverviewOptions
 ): Overview {
+  const entries = getGroupOverviewEntries(overview.group.entries, options);
+
   return {
     title: overview.group.label,
-    entries: getGroupOverviewEntries(overview.group.entries, options),
+    description: getEntriesSummary(entries, options),
+    entries,
   };
 }
 
@@ -29,16 +33,35 @@ export function getDirectoryOverview(
   options: OverviewOptions
 ): Overview {
   const indexPage = getDirectoryPage(directory, options);
+  const entries = getDirectoryEntries(directory, options);
 
   return {
     title: indexPage?.title ?? getPathName(directory),
-    entries: [
-      ...getChildPages(directory, options),
-      ...getChildDirectories(directory, options),
-    ]
-      .sort(compareDirectoryEntries)
-      .map(({ entry }) => entry),
+    description: getEntriesSummary(entries, options),
+    entries,
   };
+}
+
+function getDirectoryEntries(
+  directory: string,
+  options: OverviewOptions
+): OverviewLink[] {
+  return [
+    ...getChildPages(directory, options),
+    ...getChildDirectories(directory, options),
+  ]
+    .sort(compareDirectoryEntries)
+    .map(({ entry }) => entry);
+}
+
+function getEntriesSummary(
+  entries: OverviewEntry[],
+  options: OverviewOptions
+): string | undefined {
+  return getLabelsSummary(
+    entries.map(({ label }) => label),
+    options.lang
+  );
 }
 
 function getGroupOverviewEntries(
@@ -62,8 +85,9 @@ function getGroupOverviewEntries(
           type: "link",
           label: entry.label,
           href: groupOverview.href,
-          description: getDirectoryPage(groupOverview.directory, options)
-            ?.description,
+          description:
+            getDirectoryPage(groupOverview.directory, options)?.description ??
+            getGroupSummary(groupOverview, options),
         },
       ];
     }
@@ -74,6 +98,22 @@ function getGroupOverviewEntries(
       ? [{ type: "group", label: entry.label, entries: groupEntries }]
       : [];
   });
+}
+
+function getGroupSummary(
+  overview: SidebarOverview,
+  options: OverviewOptions
+): string | undefined {
+  return getLabelsSummary(
+    overview.group.entries
+      .filter(
+        (entry) =>
+          entry.type === "group" ||
+          hrefToSlug(entry.href, options.context) !== overview.slug
+      )
+      .map(({ label }) => label),
+    options.lang
+  );
 }
 
 function getLinkOverviewEntry(
@@ -160,7 +200,12 @@ function getChildDirectories(
             type: "link" as const,
             label: page?.label ?? getPathName(childDirectory),
             href: getLocalizedHref(childDirectory, options),
-            description: page?.description,
+            description:
+              page?.description ??
+              getEntriesSummary(
+                getDirectoryEntries(childDirectory, options),
+                options
+              ),
           },
           order: page?.order,
           slug: childDirectory,
@@ -209,11 +254,13 @@ export interface OverviewOptions {
   context: StarlightGroupPagesContext;
   currentSlug: string;
   docs: DocsIndex;
+  lang: string;
   locale: string | undefined;
   overviews: SidebarOverview[];
 }
 
 export interface Overview {
+  description: string | undefined;
   title: string;
   entries: OverviewEntry[];
 }

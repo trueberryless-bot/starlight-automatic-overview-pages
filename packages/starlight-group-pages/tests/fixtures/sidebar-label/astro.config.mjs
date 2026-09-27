@@ -3,12 +3,11 @@ import { defineConfig } from "astro/config";
 import starlightGroupPages from "starlight-group-pages";
 
 export default defineConfig({
-  build: { format: "file" },
   integrations: [
     starlight({
       title: "Group Pages",
       pagefind: false,
-      plugins: [starlightGroupPages()],
+      plugins: [starlightGroupPages({ sidebarLink: "label" })],
       sidebar: [
         { label: "Start", items: ["index"] },
         { label: "Guides", items: [{ autogenerate: { directory: "guides" } }] },
