@@ -1,21 +1,21 @@
 ---
 title: Configuration
-description: An overview of all the configuration options supported by the Starlight Automatic Overview Pages plugin.
+description: An overview of all the configuration options supported by the Starlight Group Pages plugin.
 ---
 
-The Starlight Automatic Overview Pages plugin can be configured inside the `astro.config.mjs` configuration file of your project:
+The Starlight Group Pages plugin can be configured inside the `astro.config.mjs` configuration file of your project:
 
 ```js {11}
 // astro.config.mjs
 import starlight from "@astrojs/starlight";
 import { defineConfig } from "astro/config";
-import starlightAutomaticOverviewPages from "starlight-automatic-overview-pages";
+import starlightGroupPages from "starlight-group-pages";
 
 export default defineConfig({
   integrations: [
     starlight({
       plugins: [
-        starlightAutomaticOverviewPages({
+        starlightGroupPages({
           // Configuration options go here.
         }),
       ],
@@ -27,45 +27,40 @@ export default defineConfig({
 
 ## Configuration options
 
-The Starlight Automatic Overview Pages plugin accepts the following configuration options:
+The Starlight Group Pages plugin accepts the following configuration options:
 
 ### `exclude`
 
 **Type:** `string[]`  
 **Default:** `[]`
 
-A list of [glob patterns](https://github.com/micromatch/picomatch#globbing-features) matching directories for which no overview page is generated and no index page is extended.
-Patterns are matched against the directory path relative to the `src/content/docs/` directory, without the locale of multilingual sites.
+A list of [glob patterns](https://github.com/micromatch/picomatch#globbing-features) matching directories to ignore.
+Matching directories get no generated page, their index page is not extended, and their sidebar group gets no “Overview” link.
 
-```js
-starlightAutomaticOverviewPages({
-  // Skips the `reference/` directory and all its subdirectories.
-  exclude: ["reference", "reference/**"],
-});
-```
+Patterns match directory paths relative to `src/content/docs/`, without the locale of multilingual sites, e.g. `reference` or `reference/**`.
 
 ### `extendIndexPages`
 
 **Type:** `boolean`  
 **Default:** `true`
 
-Whether the link cards of a directory are appended to its existing index page, e.g. `guides/index.mdx`.
-See [“Add an introduction”](/customization/#add-an-introduction) for more details.
+Whether to append the link cards of a directory to its existing index page, e.g. `guides/index.mdx`.
+See [“Add an introduction”](/customization/#add-an-introduction).
 
 ### `layout`
 
 **Type:** `'grid' | 'list'`  
 **Default:** `'grid'`
 
-The layout of the link cards on overview pages.
+The layout of the link cards:
 
-- `grid` displays the link cards in a responsive grid using the Starlight [`<CardGrid>`](https://starlight.astro.build/components/cards/#group-cards) component.
-- `list` displays the link cards below each other.
+- `grid`: a responsive grid using the Starlight [`<CardGrid>`](https://starlight.astro.build/components/cards/#group-cards) component
+- `list`: one link card below the other
 
 ### `sidebarLink`
 
 **Type:** `boolean`  
 **Default:** `true`
 
-Whether an “Overview” link to the overview page is added as the first item of each sidebar group.
-See [“Sidebar groups”](/overview-pages/#sidebar-groups) for more details.
+Whether to add an “Overview” link to the group page as the first item of each sidebar group.
+See [“Sidebar and pagination”](/group-pages/#sidebar-and-pagination).

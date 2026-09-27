@@ -1,18 +1,16 @@
 ---
 title: Getting Started
-description: Learn how to generate overview pages for your sidebar groups with the Starlight Automatic Overview Pages plugin.
+description: Learn how to give your sidebar groups their own pages with the Starlight Group Pages plugin.
 ---
 
-A [Starlight plugin](https://starlight.astro.build/reference/plugins/) to generate overview pages for your sidebar groups.
+A [Starlight plugin](https://starlight.astro.build/reference/plugins/) to give your sidebar groups their own pages.
 
-Sidebar groups in Starlight organize pages, but a group has no page of its own: clicking a group label only expands or collapses it.
-This plugin gives every group a landing page:
+In Starlight, a sidebar group only expands and collapses its items.
+With this plugin, every group gets a [group page](/group-pages/) listing its content, linked as the first item of the group:
 
-- [Overview pages](/overview-pages/) are generated for every directory of your docs, listing its pages and subdirectories as [link cards](https://starlight.astro.build/components/link-cards/).
-- Each sidebar group gets an “Overview” link to its overview page, which is also part of the previous and next page links.
-- Existing index pages, e.g. `guides/index.mdx`, are [extended](/customization/#add-an-introduction) with the link cards so you can write your own introduction.
-
-Browse the [demo](/demo/) to see the generated pages in action.
+- Directories without an index page get a [generated group page](/group-pages/#generated-pages).
+- Existing index pages keep their content and get the link cards [appended](/customization/#add-an-introduction).
+- The group page is part of the [sidebar and the pagination](/group-pages/#sidebar-and-pagination).
 
 ## Prerequisites
 
@@ -26,9 +24,9 @@ import { PackageManagers } from "starlight-package-managers";
 
 <Steps>
 
-1. Starlight Automatic Overview Pages is a Starlight [plugin](https://starlight.astro.build/reference/plugins/) that you can install using your favorite package manager:
+1. Starlight Group Pages is a Starlight [plugin](https://starlight.astro.build/reference/plugins/) that you can install using your favorite package manager:
 
-   <PackageManagers pkg="starlight-automatic-overview-pages" />
+   <PackageManagers pkg="starlight-group-pages" />
 
 2. Configure the plugin in your Starlight [configuration](https://starlight.astro.build/reference/configuration/#plugins) in the `astro.config.mjs` file.
 
@@ -36,40 +34,40 @@ import { PackageManagers } from "starlight-package-managers";
    // astro.config.mjs
    import starlight from '@astrojs/starlight'
    import { defineConfig } from 'astro/config'
-   +import starlightAutomaticOverviewPages from 'starlight-automatic-overview-pages'
+   +import starlightGroupPages from 'starlight-group-pages'
 
    export default defineConfig({
      integrations: [
        starlight({
-   +      plugins: [starlightAutomaticOverviewPages()],
+   +      plugins: [starlightGroupPages()],
          title: 'My Docs',
        }),
      ],
    })
    ```
 
-3. [Start the development server](https://starlight.astro.build/getting-started/#start-the-development-server) to see the plugin in action.
+3. [Start the development server](https://starlight.astro.build/getting-started/#start-the-development-server) and open the URL of a directory of your docs, e.g. `/guides/`, to see its group page.
 
 </Steps>
 
-The Starlight Automatic Overview Pages plugin behavior can be tweaked using various [configuration options](/configuration/).
+The Starlight Group Pages plugin behavior can be tweaked using various [configuration options](/configuration/).
 
 ## Component overrides
 
-The Starlight Automatic Overview Pages plugin uses a Starlight [component override](https://starlight.astro.build/guides/overriding-components/) for the [`MarkdownContent`](https://starlight.astro.build/reference/overrides/#markdowncontent) component to render the link cards of overview pages.
+The Starlight Group Pages plugin uses a Starlight [component override](https://starlight.astro.build/guides/overriding-components/) for the [`MarkdownContent`](https://starlight.astro.build/reference/overrides/#markdowncontent) component to render the link cards.
 
-If you have a custom `MarkdownContent` component override in your Starlight project, you will need to manually render the `MarkdownContent` component from the Starlight Automatic Overview Pages plugin inside the default component:
+If you have a custom `MarkdownContent` component override in your Starlight project, you will need to manually render the `MarkdownContent` component from the Starlight Group Pages plugin inside the default component:
 
 ```diff lang="astro"
 ---
 // src/components/overrides/MarkdownContent.astro
 import Default from '@astrojs/starlight/components/MarkdownContent.astro'
-+import StarlightAutomaticOverviewPagesMarkdownContent from 'starlight-automatic-overview-pages/components/MarkdownContent.astro'
++import StarlightGroupPagesMarkdownContent from 'starlight-group-pages/components/MarkdownContent.astro'
 ---
 
 <Default>
   <slot />
-+  <StarlightAutomaticOverviewPagesMarkdownContent />
++  <StarlightGroupPagesMarkdownContent />
 </Default>
 <p>Custom content in the MarkdownContent override</p>
 ```

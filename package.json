@@ -1,17 +1,17 @@
 {
-  "name": "starlight-automatic-overview-pages-monorepo",
+  "name": "starlight-group-pages-monorepo",
   "version": "0.0.0",
   "license": "MIT",
-  "description": "Starlight plugin to generate overview pages for your sidebar groups.",
+  "description": "Starlight plugin to give your sidebar groups their own pages.",
   "author": "trueberryless <trueberryless@gmail.com> (https://felixs.dev)",
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "pnpm --filter starlight-automatic-overview-pages-docs build",
-    "check": "pnpm --filter starlight-automatic-overview-pages-docs astro sync && astro check --noSync",
-    "dev": "pnpm --filter starlight-automatic-overview-pages-docs dev",
+    "build": "pnpm --filter starlight-group-pages-docs build",
+    "check": "pnpm --filter starlight-group-pages-docs astro sync && astro check --noSync",
+    "dev": "pnpm --filter starlight-group-pages-docs dev",
     "format": "prettier . --write --cache --ignore-unknown",
-    "test": "pnpm --filter starlight-automatic-overview-pages test",
+    "test": "pnpm --filter starlight-group-pages test",
     "version": "pnpm changeset version && pnpm i --no-frozen-lockfile"
   },
   "devDependencies": {
@@ -28,10 +28,10 @@
   "engines": {
     "node": ">=22.12.0"
   },
-  "homepage": "https://starlight-automatic-overview-pages.netlify.app",
+  "homepage": "https://starlight-group-pages.netlify.app",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/trueberryless-org/starlight-automatic-overview-pages.git"
+    "url": "git+https://github.com/trueberryless-org/starlight-group-pages.git"
   },
-  "bugs": "https://github.com/trueberryless-org/starlight-automatic-overview-pages/issues"
+  "bugs": "https://github.com/trueberryless-org/starlight-group-pages/issues"
 }

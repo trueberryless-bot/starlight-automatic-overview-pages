@@ -1,8 +1,8 @@
 {
-  "name": "starlight-automatic-overview-pages-docs",
+  "name": "starlight-group-pages-docs",
   "version": "0.0.1",
   "license": "MIT",
-  "description": "Documentation for the Starlight Automatic Overview Pages plugin.",
+  "description": "Documentation for the Starlight Group Pages plugin.",
   "author": "trueberryless <trueberryless@gmail.com> (https://felixs.dev)",
   "private": true,
   "type": "module",
@@ -19,18 +19,18 @@
     "astro": "^7.3.5",
     "astro-contributors": "^0.9.0",
     "sharp": "^0.35.4",
-    "starlight-automatic-overview-pages": "workspace:*",
+    "starlight-group-pages": "workspace:*",
     "starlight-links-validator": "^0.26.0",
     "starlight-package-managers": "^0.13.0"
   },
   "engines": {
     "node": ">=22.12.0"
   },
-  "homepage": "https://starlight-automatic-overview-pages.netlify.app",
+  "homepage": "https://starlight-group-pages.netlify.app",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/trueberryless-org/starlight-automatic-overview-pages.git",
+    "url": "git+https://github.com/trueberryless-org/starlight-group-pages.git",
     "directory": "docs"
   },
-  "bugs": "https://github.com/trueberryless-org/starlight-automatic-overview-pages/issues"
+  "bugs": "https://github.com/trueberryless-org/starlight-group-pages/issues"
 }

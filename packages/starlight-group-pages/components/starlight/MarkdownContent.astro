@@ -1,0 +1,7 @@
+---
+import OverviewEntries from "../OverviewEntries.astro";
+
+const { overview } = Astro.locals.starlightGroupPages;
+---
+
+{overview && <OverviewEntries entries={overview.entries} />}
