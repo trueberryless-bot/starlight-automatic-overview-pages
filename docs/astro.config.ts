@@ -10,11 +10,17 @@ const site =
     ? process.env.DEPLOY_PRIME_URL
     : process.env.URL) ?? "https://starlight-group-pages.netlify.app";
 
+const isLabelDemo = process.env.DEMO_SIDEBAR_LINK === "label";
+
 export default defineConfig({
   site,
+  ...(isLabelDemo ? { base: "/label", outDir: "./dist/label" } : {}),
   integrations: [
     starlight({
       title: "Starlight Group Pages",
+      head: isLabelDemo
+        ? [{ tag: "meta", attrs: { name: "robots", content: "noindex" } }]
+        : [],
       social: [
         {
           icon: "github",
@@ -27,11 +33,13 @@ export default defineConfig({
           "https://github.com/trueberryless-org/starlight-group-pages/edit/main/docs/",
       },
       plugins: [
-        starlightLinksValidator({ exclude: ["/demo/"] }),
+        ...(isLabelDemo
+          ? []
+          : [starlightLinksValidator({ exclude: ["/demo/"] })]),
         starlightPluginsDocsComponents({
           pluginName: "starlight-group-pages",
         }),
-        starlightGroupPages(),
+        starlightGroupPages({ sidebarLink: isLabelDemo ? "label" : "item" }),
       ],
       sidebar: [
         {

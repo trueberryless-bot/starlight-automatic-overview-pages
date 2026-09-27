@@ -8,8 +8,9 @@
   "type": "module",
   "scripts": {
     "astro": "astro",
-    "build": "astro build",
+    "build": "astro build && DEMO_SIDEBAR_LINK=label astro build",
     "dev": "astro dev",
+    "dev:label": "DEMO_SIDEBAR_LINK=label astro dev",
     "preview": "astro preview",
     "start": "astro dev"
   },
