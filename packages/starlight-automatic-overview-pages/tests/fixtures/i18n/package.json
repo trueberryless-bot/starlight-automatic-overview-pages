@@ -1,0 +1,10 @@
+{
+  "name": "@starlight-automatic-overview-pages-tests/i18n",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@astrojs/starlight": "^0.42.4",
+    "astro": "^7.3.5",
+    "starlight-automatic-overview-pages": "workspace:*"
+  }
+}

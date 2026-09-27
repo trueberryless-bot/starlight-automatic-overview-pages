@@ -1,0 +1,40 @@
+---
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+import config from "virtual:starlight-automatic-overview-pages/config";
+
+import type { OverviewEntry } from "../libs/overview";
+import {
+  getHeadingId,
+  getHeadingTag,
+  getLinkCardProps,
+  getOverviewSections,
+} from "../libs/sections";
+
+interface Props {
+  entries: OverviewEntry[];
+  level?: number;
+}
+
+const { entries, level = 2 } = Astro.props;
+
+const sections = getOverviewSections(entries);
+const Heading = getHeadingTag(level);
+const Links = config.layout === "grid" ? CardGrid : Fragment;
+---
+
+{sections.map((section) =>
+  section.type === "links" ? (
+    <Links>
+      {section.links.map((link) => (
+        <LinkCard {...getLinkCardProps(link)} />
+      ))}
+    </Links>
+  ) : (
+    <>
+      <Heading id={getHeadingId(section.group.label)}>
+        {section.group.label}
+      </Heading>
+      <Astro.self entries={section.group.entries} level={level + 1} />
+    </>
+  )
+)}

@@ -1,0 +1,153 @@
+import type { StarlightRouteData } from "@astrojs/starlight/route-data";
+
+import type { StarlightAutomaticOverviewPagesConfig } from "./config";
+import { isOverviewDirectory } from "./directory";
+import { type DocsIndex, findDocsPage, getLocaleDirectories } from "./docs";
+import { localizeSlug, stripSlugLocale } from "./locale";
+import { getCommonPath, getParentPath, hrefToSlug, slugToHref } from "./path";
+import type { StarlightAutomaticOverviewPagesContext } from "./vite";
+
+export function getSidebarOverviews(
+  sidebar: SidebarEntry[],
+  options: SidebarOptions
+): SidebarOverview[] {
+  const claimedDirectories = new Set<string>();
+
+  return getSidebarGroups(sidebar).flatMap((group) => {
+    const directory = getGroupDirectory(group, options);
+
+    if (
+      directory === undefined ||
+      claimedDirectories.has(directory) ||
+      !isOverviewDirectory(
+        directory,
+        options.docs,
+        options.locale,
+        options.config
+      )
+    ) {
+      return [];
+    }
+
+    claimedDirectories.add(directory);
+
+    const slug = localizeSlug(directory, options.locale);
+
+    return [
+      { directory, group, href: slugToHref(slug, options.context), slug },
+    ];
+  });
+}
+
+export function insertOverviewLinks(
+  overviews: SidebarOverview[],
+  options: SidebarOptions & { currentSlug: string; label: string }
+): boolean {
+  const missingOverviews = overviews.filter(
+    (overview) =>
+      !hasOverviewLink(overview, options) &&
+      !isHiddenOverviewPage(overview, options)
+  );
+
+  for (const overview of missingOverviews) {
+    overview.group.entries.unshift(getOverviewLink(overview, options));
+  }
+
+  return missingOverviews.length > 0;
+}
+
+export function getSidebarLinks(sidebar: SidebarEntry[]): SidebarLink[] {
+  return sidebar.flatMap((entry) =>
+    entry.type === "group" ? getSidebarLinks(entry.entries) : entry
+  );
+}
+
+function getSidebarGroups(sidebar: SidebarEntry[]): SidebarGroup[] {
+  return sidebar.flatMap((entry) =>
+    entry.type === "group" ? [entry, ...getSidebarGroups(entry.entries)] : []
+  );
+}
+
+function getGroupDirectory(
+  group: SidebarGroup,
+  options: SidebarOptions
+): string | undefined {
+  const directories = getSidebarLinks(group.entries)
+    .map((link) => getLinkDirectory(link, options))
+    .filter((directory) => directory !== undefined);
+
+  if (directories.length === 0) return undefined;
+
+  return getCommonPath(directories) || undefined;
+}
+
+function getLinkDirectory(
+  link: SidebarLink,
+  options: SidebarOptions
+): string | undefined {
+  const slug = hrefToSlug(link.href, options.context);
+  if (slug === undefined) return undefined;
+
+  const relativeSlug = stripSlugLocale(slug, options.context);
+
+  return getLocaleDirectories(options.docs, options.locale).has(relativeSlug)
+    ? relativeSlug
+    : getParentPath(relativeSlug);
+}
+
+function hasOverviewLink(
+  overview: SidebarOverview,
+  options: SidebarOptions
+): boolean {
+  return overview.group.entries.some(
+    (entry) =>
+      entry.type === "link" &&
+      hrefToSlug(entry.href, options.context) === overview.slug
+  );
+}
+
+function isHiddenOverviewPage(
+  overview: SidebarOverview,
+  options: SidebarOptions
+): boolean {
+  const page = findDocsPage(
+    options.docs,
+    overview.directory,
+    options.locale,
+    options.context
+  );
+
+  return page?.hidden ?? false;
+}
+
+function getOverviewLink(
+  overview: SidebarOverview,
+  options: { currentSlug: string; label: string }
+): SidebarLink {
+  return {
+    type: "link",
+    label: options.label,
+    href: overview.href,
+    isCurrent: overview.slug === options.currentSlug,
+    badge: undefined,
+    attrs: {},
+  };
+}
+
+export interface SidebarOptions {
+  config: Pick<StarlightAutomaticOverviewPagesConfig, "exclude">;
+  context: StarlightAutomaticOverviewPagesContext;
+  docs: DocsIndex;
+  locale: string | undefined;
+}
+
+export interface SidebarOverview {
+  directory: string;
+  group: SidebarGroup;
+  href: string;
+  slug: string;
+}
+
+export type SidebarEntry = StarlightRouteData["sidebar"][number];
+export type SidebarGroup = Extract<SidebarEntry, { type: "group" }>;
+export type SidebarLink = Extract<SidebarEntry, { type: "link" }>;
