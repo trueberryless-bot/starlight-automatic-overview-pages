@@ -1,0 +1,101 @@
+---
+import Default from "@astrojs/starlight/components/Banner.astro";
+---
+
+<Default />
+
+<script>
+  // Starlight only persists the state of sidebar groups toggled by the user, so the collapsed “Demo” group, opened
+  // because it contains the current page when following a link to a demo page, e.g. from the landing page or from the
+  // banner linking to the other demo which has a different sidebar hash, would collapse again when navigating to a page
+  // outside of it. When following a link to a demo page, this persists the sidebar state of the demo page instead.
+  const demoLinkKey = "starlight-group-pages-demo-link";
+  const sidebarStateKey = "sl-sidebar-state";
+  const demoPathnameRegex = /^(?:\/label)?\/demo(?:\/|$)/;
+
+  document.addEventListener("click", (event) => {
+    if (!(event.target instanceof Element)) return;
+
+    const link = event.target.closest("a");
+    if (!link || !isDemoLink(link)) return;
+
+    try {
+      sessionStorage.setItem(demoLinkKey, JSON.stringify(getOpenStates()));
+    } catch {
+      // Persisting the sidebar state is a progressive enhancement.
+    }
+  });
+
+  persistDemoSidebarState();
+
+  function persistDemoSidebarState() {
+    try {
+      const storedOpenStates = sessionStorage.getItem(demoLinkKey);
+      if (!storedOpenStates) return;
+
+      sessionStorage.removeItem(demoLinkKey);
+
+      const hash = document.querySelector<HTMLElement>(
+        "sl-sidebar-state-persist"
+      )?.dataset["hash"];
+      if (!hash) return;
+
+      const previousOpenStates: unknown = JSON.parse(storedOpenStates);
+
+      if (Array.isArray(previousOpenStates)) {
+        for (const [index, details] of getSidebarDetails()) {
+          const previousOpenState = previousOpenStates[index];
+
+          if (
+            typeof previousOpenState === "boolean" &&
+            !hasCurrentPage(details)
+          ) {
+            details.open = previousOpenState;
+          }
+        }
+      }
+
+      sessionStorage.setItem(
+        sidebarStateKey,
+        JSON.stringify({ hash, open: getOpenStates(), scroll: 0 })
+      );
+    } catch {
+      // Persisting the sidebar state is a progressive enhancement.
+    }
+  }
+
+  function isDemoLink(link: HTMLAnchorElement): boolean {
+    return (
+      link.origin === location.origin && demoPathnameRegex.test(link.pathname)
+    );
+  }
+
+  function hasCurrentPage(details: HTMLDetailsElement): boolean {
+    return details.querySelector('[aria-current="page"]') !== null;
+  }
+
+  function getOpenStates(): boolean[] {
+    const open: boolean[] = [];
+
+    for (const [index, details] of getSidebarDetails()) {
+      open[index] = details.open;
+    }
+
+    return open;
+  }
+
+  function getSidebarDetails(): [number, HTMLDetailsElement][] {
+    return [
+      ...document.querySelectorAll<HTMLDetailsElement>(
+        "#starlight__sidebar details"
+      ),
+    ].flatMap((details) => {
+      const restoreElement = details.querySelector<HTMLElement>(
+        ":scope > sl-sidebar-restore"
+      );
+      const index = Number.parseInt(restoreElement?.dataset["index"] ?? "");
+
+      return Number.isNaN(index) ? [] : [[index, details]];
+    });
+  }
+</script>
