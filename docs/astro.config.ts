@@ -17,6 +17,9 @@ export default defineConfig({
   ...(isLabelDemo ? { base: "/label", outDir: "./dist/label" } : {}),
   integrations: [
     starlight({
+      components: {
+        Footer: "./src/components/Footer.astro",
+      },
       title: "Starlight Group Pages",
       head: [
         {
