@@ -67,11 +67,11 @@ export default defineConfig({
           label: "Start Here",
           items: [
             "getting-started",
+            "configuration",
             "group-pages",
             "customization",
             "components",
             "i18n",
-            "configuration",
           ],
         },
         {
